@@ -15,3 +15,11 @@
 
 ​	dataset.py和utils.py主要是一些临时代码，可以删除。
 
+#### 2022/10/2
+
+​	增加两个数据格式文件：
+
+- ​	**data/train/tags2movie.json**:格式为**{'tagid'(str) : [movieids] (list)}**,记录了每个tag存在于哪些电影中
+- ​    **data/train/datatagsmatrix.npy**:记录了两个tags在同样电影的电影数，行列为tagid,矩阵值为电影数。
+
+ 

@@ -110,7 +110,65 @@ def caluser2tagslike():
     with open('data/train/user2tagslike.json', 'w') as f:
         json.dump(user2liketags,f)
 
+
+
+def caltagsid2movieid():
+    tags2movie = defaultdict(list)
+    with open('data/train/movie.json','r') as f:
+        movie2tags = json.load(f)
+        for item in movie2tags:
+            movieid = int(item)
+            # print(movieid)
+            tags = movie2tags[item]
+            # print(tags)
+            for tag in tags:
+                tags2movie[tag].append(movieid)
+            # print(tags2movie)
+    for item in tags2movie:
+        tags2movie[item] = list(set(tags2movie[item]))
+    # print(len(tags2movie))
+    # print(cal_num_tags())
+    # print(len(tags2movie[0]))
+    with open('data/train/tags2movie.json','w') as f:
+        json.dump(tags2movie,f)
+    pass
+
+def caltagsmatrix():
+    tagsmatrix = np.zeros((cal_num_tags()[0],cal_num_tags()[0]))
+    print(type(tagsmatrix))
+    # print(tagsmatrix.shape)
+    with open('data/train/tags2movie.json','r') as f:
+        tag2movies = json.load(f)
+    for rowid in range(cal_num_tags()[0]):
+        for columnid in range(cal_num_tags()[0]):
+            if rowid == columnid:
+                tagsmatrix[rowid][columnid] = -1
+            else:
+                common_movie_num = len(set(tag2movies[str(rowid)]) & set(tag2movies[str(columnid)]))
+                # print(set(tag2movies[str(rowid)]))
+                # print(set(tag2movies[str(columnid)]))
+                # print(set(tag2movies[str(rowid)]) & set(tag2movies[str(columnid)]))
+                tagsmatrix[rowid][columnid] = common_movie_num
+    outfile = 'data/train/datatagsmatrix.npy'
+    np.save(outfile,tagsmatrix)
+    # print(tagsmatrix)
+    # print(tagsmatrix.shape)
+    # print(tagsmatrix[0][1])
+    pass
+
+
 if __name__ == '__main__':
+    # caltagsid2movieid()
+    outfile = 'data/train/datatagsmatrix.npy'
+    # caltagsmatrix()
+    tagsmatrix = np.load(outfile)
+    print(tagsmatrix)
+    print(tagsmatrix.shape)
+    print(tagsmatrix[0][1])
+
+
+
+
     # num_tags, tags = cal_num_tags()
     # print(tags)
     # print(num_tags)
@@ -128,14 +186,21 @@ if __name__ == '__main__':
     #     for item in dic:
     #         noe = dic[item]
     #         print(len(noe))
-    num_user = 2022
-    num_tags,tags = cal_num_tags()
-    len_matrix = num_user * num_tags
-    with open('data/train/user2tagslike.json', 'r') as likef,open('data/train/user2tagsdislike.json', 'r') as dislikef:
-        user2liketags = json.load(likef)
-        user2disliketags = json.load(dislikef)
-        num_real = 0
-        for userid in range(num_user):
-            num_real += len(user2liketags[str(userid)])
-            num_real += len(user2disliketags[str(userid)]) if str(userid) in user2disliketags else 0
-    print(f'total matrix elements: {len_matrix}, have data elements: {num_real}, ratio: {num_real / len_matrix}')
+
+
+
+
+
+    # num_user = 2022
+    # num_tags,tags = cal_num_tags()
+    # len_matrix = num_user * num_tags
+    # with open('data/train/user2tagslike.json', 'r') as likef,open('data/train/user2tagsdislike.json', 'r') as dislikef:
+    #     user2liketags = json.load(likef)
+    #     user2disliketags = json.load(dislikef)
+    #     num_real = 0
+    #     for userid in range(num_user):
+    #         num_real += len(user2liketags[str(userid)])
+    #         num_real += len(user2disliketags[str(userid)]) if str(userid) in user2disliketags else 0
+    # print(f'total matrix elements: {len_matrix}, have data elements: {num_real}, ratio: {num_real / len_matrix}')
+
+
