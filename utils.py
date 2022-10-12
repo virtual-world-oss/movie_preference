@@ -158,13 +158,17 @@ def caltagsmatrix():
 
 
 if __name__ == '__main__':
+    pass
+    # print(cal_num_tags())
+
+
     # caltagsid2movieid()
-    outfile = 'data/train/datatagsmatrix.npy'
-    # caltagsmatrix()
-    tagsmatrix = np.load(outfile)
-    print(tagsmatrix)
-    print(tagsmatrix.shape)
-    print(tagsmatrix[0][1])
+    # outfile = 'data/train/datatagsmatrix.npy'
+    # # caltagsmatrix()
+    # tagsmatrix = np.load(outfile)
+    # print(tagsmatrix)
+    # print(tagsmatrix.shape)
+    # print(tagsmatrix[0][1])
 
 
 
@@ -176,6 +180,7 @@ if __name__ == '__main__':
     # caluser2tagsfordislike()
     # with open('data/train/user2tagsdislike.json','r') as f:
     #     dic = json.load(f)
+    #     print(len(dic))
     #     for item in dic:
     #         noe = dic[item]
     #         print(len(noe))
