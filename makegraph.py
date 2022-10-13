@@ -79,23 +79,40 @@ def makegraph():
     outfile = 'data/train/adj.npy'
     np.save(outfile, adj)
 
+def init_feature():
+    num_user = 2022
+    num_movie = 2022
+    num_tag, tagid = cal_num_tags()
+    graph_shape = num_tag + num_user + num_movie
+    # print(graph_shape)
+    features = np.eye(graph_shape)
+    # print(features.shape)
+    # print(np.sum(features == 1))
+    out_file = 'data/train/features.npy'
+    np.save(out_file,features)
+
 if __name__ == '__main__':
+    pass
     # makegraph()
+    # out_file = 'data/train/features.npy'
+    # features = np.load(out_file)
+    # print(features.shape)
+    # init_feature()
     # x = np.array([[1,0],[0,1]])
     # y = np.sum(x == 1)
     # print(y)
-    outfile = 'data/train/adj.npy'
-    adj = np.load(outfile)
-
-    adj_shape = adj.shape[0]
-
-    num_independent_node = 0
-    for i in range(adj_shape):
-        x = False
-        for j in range(adj_shape):
-            if adj[i][j] == 1:
-                x = True
-        if x == False:
-            num_independent_node += 1
-
-    print(num_independent_node)
+    # outfile = 'data/train/adj.npy'
+    # adj = np.load(outfile)
+    #
+    # adj_shape = adj.shape[0]
+    #
+    # num_independent_node = 0
+    # for i in range(adj_shape):
+    #     x = False
+    #     for j in range(adj_shape):
+    #         if adj[i][j] == 1:
+    #             x = True
+    #     if x == False:
+    #         num_independent_node += 1
+    #
+    # print(num_independent_node)

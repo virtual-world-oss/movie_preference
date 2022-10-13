@@ -1,6 +1,8 @@
 import json
 import csv
 from collections import defaultdict
+
+import torch
 from tqdm.auto import tqdm
 from pprint import pprint
 import numpy as np
@@ -158,6 +160,56 @@ def caltagsmatrix():
 
 
 if __name__ == '__main__':
+    # x = np.array([1,2,3,4,5,6,7])
+    # y = [2,3]
+    # z = x[y]
+    # print(z)
+
+    import torch.nn.functional as F
+    x = [1,1,1,1]
+    x = torch.Tensor(x)
+    y = F.one_hot(x)
+    print(y)
+    # asdf = torch.Tensor([])
+    #
+    #
+    # x = torch.Tensor([[1],[2],[3],[4],[5],[6],[7],[8]])
+    # y = [2,3]
+    # y2 = [3,4]
+    #
+    # z = x[y]
+    # z2 = x[y2]
+    # # print(z)
+    # u = z[0]
+    # t = z[1]
+    # print(u)
+    # print(t)
+    #
+    # u2 = z2[0]
+    # t2 = z2[1]
+    # print(u2)
+    # print(t2)
+    #
+    # r = torch.cat([u,t],-1)
+    # print(r)
+    #
+    # r2 = torch.cat([u2,t2],-1)
+    # print(r2)
+    # r = r.unsqueeze(0)
+    # r2 = r2.unsqueeze(0)
+    # r3 = torch.Tensor([5,6])
+    # r3 = r3.unsqueeze(0)
+    # # a = [r,r2,r3]
+    #
+    # rr = torch.cat([r,r2],0)
+    # print(rr)
+    # rr = torch.cat([rr,r3],0)
+    # print(rr)
+    #
+    # rrr = torch.cat([asdf,r3],0)
+    # print(rrr)
+    # rrr = torch.cat([rrr,r],0)
+    # print(rrr)
     pass
     # print(cal_num_tags())
 
