@@ -5,7 +5,7 @@ import scipy.sparse as sp
 import numpy as np
 import torch
 
-def load_data(whether_negative_sample = False,train_ratio = 0.8,val_ratio = 0.1,test_ratio = 0.1):
+def load_data(whether_negative_sample = False,train_ratio = 0.8,val_ratio = 0.1,test_ratio = 0.1,label_type = 2):
     adj = np.load('data/train/adj.npy')
     feature = np.load('data/train/features.npy')
     adj = normalize(adj + np.eye(adj.shape[0]))
@@ -49,9 +49,14 @@ def load_data(whether_negative_sample = False,train_ratio = 0.8,val_ratio = 0.1,
         adj = torch.FloatTensor(adj)
         feature = torch.FloatTensor(feature)
 
-        idx_train_label = torch.LongTensor(idx_train_label)
-        idx_val_label = torch.LongTensor(idx_val_label)
-        idx_test_label = torch.LongTensor(idx_test_label)
+        if label_type == 1:
+            idx_train_label = torch.FloatTensor(idx_train_label)
+            idx_val_label = torch.FloatTensor(idx_val_label)
+            idx_test_label = torch.FloatTensor(idx_test_label)
+        elif label_type == 2:
+            idx_train_label = torch.LongTensor(idx_train_label)
+            idx_val_label = torch.LongTensor(idx_val_label)
+            idx_test_label = torch.LongTensor(idx_test_label)
 
 
         return adj,feature,idx_train,idx_train_label,idx_val,idx_val_label,idx_test,idx_test_label

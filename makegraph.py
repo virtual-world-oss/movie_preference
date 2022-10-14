@@ -92,12 +92,12 @@ def init_feature():
     np.save(out_file,features)
 
 if __name__ == '__main__':
-    pass
+
     # makegraph()
     # out_file = 'data/train/features.npy'
     # features = np.load(out_file)
     # print(features.shape)
-    # init_feature()
+    init_feature()
     # x = np.array([[1,0],[0,1]])
     # y = np.sum(x == 1)
     # print(y)
@@ -116,3 +116,8 @@ if __name__ == '__main__':
     #         num_independent_node += 1
     #
     # print(num_independent_node)
+
+
+
+
+    pass

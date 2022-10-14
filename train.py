@@ -32,8 +32,6 @@ parser.add_argument('--dropout', type=float, default=0.5,
                     help='Dropout rate (1 - keep probability).')
                     '''
 
-
-adj,feature,idx_train,idx_train_label,idx_val,idx_val_label,idx_test,idx_test_label = load_data()
 cofig = {
     'device':0,#0 for cpu and 1 for cuda
     'epochs':5,
@@ -42,14 +40,26 @@ cofig = {
     'nhid1':16,
     'nhid2':16,
     'nhid3':16,
-    'nclass':2,
-    'dropout':0.5
+    'nclass':2,#取1则使用sigmoid，取2则使用softmax
+    'dropout':0.5,
 }
+
+adj,feature,idx_train,idx_train_label,idx_val,idx_val_label,idx_test,idx_test_label = load_data(label_type=cofig['nclass'])
+
+
 
 model = Recommender(feature.shape[1],cofig['nhid1'],cofig['nhid2'],cofig['nhid3'],cofig['nclass'],cofig['dropout'])
 
 optimizer = optim.Adam(model.parameters(),
                        lr=cofig['lr'], weight_decay=cofig['weight_decay'])
+if cofig['nclass'] == 1:
+    loss_func = F.binary_cross_entropy
+    idx_train_label = idx_train_label.unsqueeze(1)
+    idx_val_label = idx_val_label.unsqueeze(1)
+    idx_test_label = idx_test_label.unsqueeze(1)
+elif cofig['nclass'] == 2:
+    loss_func = F.nll_loss
+
 
 if cofig['device'] != 0:
     model.cuda()
@@ -72,7 +82,7 @@ def train(epoch):
     optimizer.zero_grad()
     embedding = model.encode(adj,feature)
     output = model.decode(embedding,idx_train)
-    loss_train = F.nll_loss(output,idx_train_label)
+    loss_train = loss_func(output,idx_train_label)
     acc_train = accuracy(output, idx_train_label)
     loss_train.backward()
     optimizer.step()
@@ -81,7 +91,7 @@ def train(epoch):
     model.eval()
     embedding = model.encode(adj, feature)
     output = model.decode(embedding, idx_val)
-    loss_val = F.nll_loss(output, idx_val_label)
+    loss_val = loss_func(output, idx_val_label)
     acc_val = accuracy(output, idx_val_label)
 
     print('Epoch: {:04d}'.format(epoch+1),
@@ -112,12 +122,12 @@ def train(epoch):
     #       'acc_val: {:.4f}'.format(acc_val.item()),
     #       'time: {:.4f}s'.format(time.time() - t))
 
-def test():
+def _test():
     model.eval()
     embedding = model.encode(adj, feature)
     output = model.decode(embedding, idx_test)
     print(output)
-    loss_test = F.nll_loss(output, idx_test_label)
+    loss_test = loss_func(output, idx_test_label)
     # loss_test = F.nll_loss(output[idx_test], labels[idx_test])
     acc_test = accuracy(output, idx_test_label)
     print("Test set results:",
@@ -131,4 +141,4 @@ for epoch in range(cofig['epochs']):
     train(epoch)
 print("Optimization Finished!")
 print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
-test()
+_test()
