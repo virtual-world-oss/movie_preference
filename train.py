@@ -34,7 +34,7 @@ parser.add_argument('--dropout', type=float, default=0.5,
 
 cofig = {
     'device':0,#0 for cpu and 1 for cuda
-    'epochs':5,
+    'epochs':500,
     'lr':0.01,
     'weight_decay':5e-4,
     'nhid1':16,
@@ -43,6 +43,7 @@ cofig = {
     'nclass':2,#取1则使用sigmoid，取2则使用softmax
     'dropout':0.5,
     'seed':3407,
+    'epoch_save':50
 }
 
 adj,feature,idx_train,idx_train_label,idx_val,idx_val_label,idx_test,idx_test_label = load_data(whether_negative_sample=True,label_type=cofig['nclass'],seed = cofig['seed'])
@@ -93,13 +94,14 @@ elif cofig['nclass'] == 2:
 
 
 
-def train(epoch):
+def train(epoch,best_acc):
     #train
     t = time.time()
     model.train()
     optimizer.zero_grad()
     embedding = model.encode(adj,feature)
     output = model.decode(embedding,idx_train)
+    print(output)
     loss_train = loss_func(output,idx_train_label)
     # print(output.shape,idx_train_label.shape,output[0][0],idx_train_label[0][0],output[0][0]>0.5)
     acc_train = acc_func(output, idx_train_label)
@@ -119,7 +121,14 @@ def train(epoch):
           'loss_val: {:.4f}'.format(loss_val.item()),
           'acc_val: {:.4f}'.format(acc_val.item()),
           'time: {:.4f}s'.format(time.time() - t))
-
+    # if acc_val > best_acc:
+    #     best_acc = acc_val
+    #     torch.save(model, f'Model\ModelSave\GCNModel_train_acc_{acc_train}_val_acc_{acc_val}_epoch_{epoch}.pth')
+    #     torch.save(model.state_dict(), f'Model\ModelSave\state_GCNModel_train_acc_{acc_train}_val_acc_{acc_val}_epoch_{epoch}.pth')
+    # if epoch % cofig['epoch_save'] == 0:
+    #     torch.save(model, f'Model\ModelSave\GCNModel_train_acc_{acc_train}_val_acc_{acc_val}_epoch_{epoch}.pth')
+    #     torch.save(model.state_dict(), f'Model\ModelSave\state_GCNModel_train_acc_{acc_train}_val_acc_{acc_val}_epoch_{epoch}.pth')
+    return best_acc
     # output = model(features, adj)
     # loss_train = F.nll_loss(output[idx_train], labels[idx_train])
     # acc_train = accuracy(output[idx_train], labels[idx_train])
@@ -155,9 +164,11 @@ def _test():
           )
           # "accuracy= {:.4f}".format(acc_test.item()))
 
+
 t_total = time.time()
+best_acc = 0
 for epoch in range(cofig['epochs']):
-    train(epoch)
+    best_acc = train(epoch,best_acc)
 print("Optimization Finished!")
 print("Total time elapsed: {:.4f}s".format(time.time() - t_total))
 _test()
