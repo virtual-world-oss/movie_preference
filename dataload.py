@@ -8,8 +8,8 @@ from makegraph import tagIdToItsIdInGraph,userIdToItsIdInGraph,movieIdToItsIdInG
 
 def load_data(whether_negative_sample = False,train_ratio = 0.8,val_ratio = 0.1,test_ratio = 0.1,label_type = 2,seed = 0):
     adj = np.load('data/train/adj.npy')
-    feature = np.load('data/train/features.npy')
-    # adj = normalize(adj + np.eye(adj.shape[0]))
+    # feature = np.load('data/train/features.npy')
+    adj = normalize(adj + np.eye(adj.shape[0]))
     np.random.seed(seed)
     feature = np.random.randn(adj.shape[0],adj.shape[0])
     # feature = np.ones((adj.shape[0],adj.shape[0]))
